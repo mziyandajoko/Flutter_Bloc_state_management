@@ -1,6 +1,9 @@
-import 'package:counter_bloc/CounterEvent.dart';
-import 'package:counter_bloc/counterBloc.dart';
+import 'package:counter_bloc/UI/widgets/Pages/profile_page.dart';
+import 'package:counter_bloc/UI/widgets/Pages/search_page.dart';
 import 'package:flutter/material.dart';
+import 'UI/widgets/Pages/home_page.dart';
+import 'bloc/CounterEvent.dart';
+import 'bloc/counterBloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,20 +19,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Counter Bloc'),
+      home: MainPage(title: 'Counter Bloc'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MainPage extends StatefulWidget {
   final String title;
+// route to pages
+  MainPage({super.key, required this.title});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+List pages = [
+  const HomePage(),
+  const SearchPage(),
+  const ProfilePage(),
+];
+int currentIndex = 0;
+void onTap(int index) {
+  setState(() {
+    currentIndex = index;
+  });
+}
+
+class _MainPageState extends State<MainPage> {
   final _bloc = CounterBloc();
 
   @override
@@ -38,25 +54,36 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-          child: StreamBuilder(
-        stream: _bloc.counter,
-        initialData: 0,
-        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '${snapshot.data}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
-          );
-        },
-      )),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        currentIndex: 1,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Colors.red,
+        fixedColor: Colors.red,
+        selectedFontSize: 0,
+        unselectedFontSize: 0,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Home',
+            icon: Icon(Icons.apps),
+          ),
+          BottomNavigationBarItem(
+            label: 'person',
+            icon: Icon(Icons.person),
+          ),
+          BottomNavigationBarItem(
+            label: 'bar',
+            icon: Icon(Icons.bar_chart),
+          ),
+          BottomNavigationBarItem(
+            label: 'search',
+            icon: Icon(Icons.search),
+          ),
+        ],
+      ),
+      body: pages[0],
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
