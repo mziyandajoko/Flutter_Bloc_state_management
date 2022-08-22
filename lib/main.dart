@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:counter_bloc/UI/widgets/Pages/profile_page.dart';
 import 'package:counter_bloc/UI/widgets/Pages/search_page.dart';
 import 'package:flutter/material.dart';
@@ -27,26 +29,25 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatefulWidget {
   final String title;
 // route to pages
-  MainPage({super.key, required this.title});
+  const MainPage({super.key, required this.title});
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
-List pages = [
-  const HomePage(),
-  const SearchPage(),
-  const ProfilePage(),
-];
-int currentIndex = 0;
-void onTap(int index) {
-  setState(() {
-    currentIndex = index;
-  });
-}
-
 class _MainPageState extends State<MainPage> {
   final _bloc = CounterBloc();
+  List pages = [
+    const HomePage(),
+    const SearchPage(),
+    const ProfilePage(),
+  ];
+  int currentIndex = 0;
+  void onTap(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,9 @@ class _MainPageState extends State<MainPage> {
         title: Text(widget.title),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        onTap: onTap,
         elevation: 0,
-        currentIndex: 1,
+        currentIndex: currentIndex,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         backgroundColor: Colors.red,
